@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal do Aluno — Marcos Valério Abreu</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F6F3;
+  --white: #FFFFFF;
+  --grafite: #1A1A1A;
+  --grafite2: #2E2E2E;
+  --cinza: #6B6B6B;
+  --cinza-claro: #E8E6E1;
+  --cinza-fundo: #EEECEA;
+  --dourado: #B8960C;
+  --dourado-bg: rgba(184,150,12,0.08);
+  --azul: #1E4976;
+  --verde: #1A6B45;
+  --verde-bg: rgba(26,107,69,0.09);
+  --amarelo: #8C5A00;
+  --amarelo-bg: rgba(140,90,0,0.08);
+  --vermelho: #B01C1C;
+  --vermelho-bg: rgba(176,28,28,0.08);
+  --header1: #0D2137;
+  --header2: #1E4976;
+  --r: 14px;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { background:var(--bg); color:var(--grafite); font-family:'Outfit',sans-serif; font-size:14px; line-height:1.5; min-height:100vh; }
+
+/* HEADER */
+.header { background:linear-gradient(135deg, #0D2137 0%, #1E4976 100%); padding:28px 20px 24px; position:relative; overflow:hidden; }
+.header::after { content:''; position:absolute; right:-40px; bottom:-40px; width:180px; height:180px; border-radius:50%; border:36px solid rgba(255,255,255,0.05); pointer-events:none; }
+.brand { font-size:9px; font-weight:600; letter-spacing:2.5px; text-transform:uppercase; color:rgba(255,255,255,0.55); margin-bottom:2px; }
+.brand-name { font-size:11px; font-weight:500; color:rgba(255,255,255,0.75); margin-bottom:22px; }
+.profile-row { display:flex; align-items:center; gap:14px; margin-bottom:18px; }
+.avatar { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,0.15); border:2px solid rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-family:'Instrument Serif',serif; font-size:22px; color:#fff; flex-shrink:0; }
+.profile-info h1 { font-size:19px; font-weight:700; color:#fff; line-height:1.2; letter-spacing:-0.3px; }
+.profile-info p { font-size:12px; color:rgba(255,255,255,0.6); margin-top:2px; }
+.header-tags { display:flex; gap:8px; flex-wrap:wrap; }
+.htag { font-size:11px; font-weight:600; padding:5px 12px; border-radius:20px; }
+.htag-white { background:rgba(255,255,255,0.12); color:rgba(255,255,255,0.85); border:1px solid rgba(255,255,255,0.18); }
+.htag-green { background:rgba(26,107,69,0.4); color:#7DEBB0; border:1px solid rgba(26,107,69,0.45); }
+.htag-yellow { background:rgba(140,90,0,0.4); color:#FFD080; border:1px solid rgba(140,90,0,0.45); }
+.htag-red { background:rgba(176,28,28,0.4); color:#FFA0A0; border:1px solid rgba(176,28,28,0.45); }
+
+/* TABS */
+.tabs { display:flex; background:var(--white); border-bottom:1px solid var(--cinza-claro); overflow-x:auto; scrollbar-width:none; position:sticky; top:0; z-index:50; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+.tabs::-webkit-scrollbar { display:none; }
+.tab { flex:none; padding:13px 16px; background:none; border:none; border-bottom:2px solid transparent; font-family:'Outfit',sans-serif; font-size:11px; font-weight:600; letter-spacing:0.8px; text-transform:uppercase; color:var(--cinza); cursor:pointer; white-space:nowrap; transition:color 0.2s,border-color 0.2s; margin-bottom:-1px; }
+.tab.active { color:var(--azul); border-bottom-color:var(--azul); }
+
+/* SECTIONS */
+.sec { display:none; padding:16px; }
+.sec.active { display:block; }
+
+/* CARD */
+.card { background:var(--white); border-radius:var(--r); padding:18px; margin-bottom:12px; border:1px solid var(--cinza-claro); }
+.card-title { font-size:11px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--cinza); margin-bottom:14px; display:flex; align-items:center; gap:7px; }
+
+/* CLASSIFICAÇÃO — BLOCO DE RISCO */
+.class-bloco {
+  border-radius:var(--r);
+  padding:16px 18px;
+  margin-bottom:12px;
+  border-left:5px solid;
+}
+.class-bloco.verde { background:var(--verde-bg); border-color:var(--verde); }
+.class-bloco.amarelo { background:var(--amarelo-bg); border-color:var(--amarelo); }
+.class-bloco.vermelho { background:var(--vermelho-bg); border-color:var(--vermelho); }
+.class-bloco-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+.verde .class-bloco-label { color:var(--verde); }
+.amarelo .class-bloco-label { color:var(--amarelo); }
+.vermelho .class-bloco-label { color:var(--vermelho); }
+.class-bloco-titulo { font-size:15px; font-weight:700; margin-bottom:4px; }
+.verde .class-bloco-titulo { color:var(--verde); }
+.amarelo .class-bloco-titulo { color:var(--amarelo); }
+.vermelho .class-bloco-titulo { color:var(--vermelho); }
+.class-bloco-desc { font-size:12px; color:var(--cinza); line-height:1.5; }
+
+/* DESTAQUE PRINCIPAL */
+.destaque {
+  background:linear-gradient(135deg, rgba(26,107,69,0.08), rgba(30,73,118,0.06));
+  border:1px solid rgba(26,107,69,0.2);
+  border-left:5px solid var(--verde);
+  border-radius:var(--r);
+  padding:16px 18px;
+  margin-bottom:12px;
+}
+.destaque h3 { font-size:14px; font-weight:700; color:var(--verde); margin-bottom:4px; }
+.destaque p { font-size:12px; color:var(--cinza); line-height:1.5; }
+
+/* METRIC GRID */
+.mgrid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.mcard { background:var(--cinza-fundo); border-radius:12px; padding:14px; border:1px solid var(--cinza-claro); }
+.mcard.destaque-card { background:rgba(26,107,69,0.06); border-color:rgba(26,107,69,0.2); }
+.mcard-label { font-size:9px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--cinza); margin-bottom:6px; }
+.mcard-value { font-size:26px; font-weight:700; letter-spacing:-0.5px; color:var(--grafite); line-height:1; }
+.mcard-sub { font-size:11px; color:var(--cinza); margin-top:4px; }
+.pill { display:inline-block; font-size:10px; font-weight:700; padding:2px 9px; border-radius:20px; margin-top:6px; }
+.pill-green { background:var(--verde-bg); color:var(--verde); border:1px solid rgba(26,107,69,0.2); }
+.pill-yellow { background:var(--amarelo-bg); color:var(--amarelo); border:1px solid rgba(140,90,0,0.2); }
+.pill-red { background:var(--vermelho-bg); color:var(--vermelho); border:1px solid rgba(176,28,28,0.2); }
+.pill-gold { background:var(--dourado-bg); color:var(--dourado); border:1px solid rgba(184,150,12,0.2); }
+
+/* COMPARATIVO */
+.comp-grid { display:grid; grid-template-columns:1fr 1fr; gap:2px; margin-bottom:4px; }
+.comp-col { padding:14px; }
+.comp-col.col1 { background:var(--cinza-fundo); border-radius:var(--r) 0 0 var(--r); border:1px solid var(--cinza-claro); }
+.comp-col.col2 { background:#fff; border-radius:0 var(--r) var(--r) 0; border:1px solid rgba(26,107,69,0.25); border-left:3px solid var(--verde); }
+.comp-label { font-size:9px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--cinza); margin-bottom:10px; }
+.comp-row { display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid rgba(0,0,0,0.05); }
+.comp-row:last-child { border-bottom:none; }
+.comp-name { font-size:11px; color:var(--cinza); }
+.comp-val { font-size:13px; font-weight:700; color:var(--grafite); }
+.comp-val.green { color:var(--verde); }
+.comp-val.yellow { color:var(--amarelo); }
+.comp-val.red { color:var(--vermelho); }
+
+/* SEGMENT BARS */
+.seg-wrap { display:flex; flex-direction:column; gap:12px; }
+.seg-label-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px; }
+.seg-name { font-size:12px; font-weight:600; color:var(--grafite2); }
+.seg-value { font-size:13px; font-weight:700; }
+.seg-bar-bg { height:10px; background:var(--cinza-claro); border-radius:5px; overflow:hidden; }
+.seg-bar-fill { height:100%; border-radius:5px; }
+
+/* CHART */
+.chart-wrap { overflow-x:auto; scrollbar-width:none; }
+.chart-wrap::-webkit-scrollbar { display:none; }
+.grid-line { stroke:#E8E6E1; stroke-width:1; }
+
+/* SEMAFORO */
+.sem-wrap { margin:4px 0 12px; }
+.sem-dots { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+.sem-dot { width:16px; height:16px; border-radius:50%; opacity:0.2; }
+.sem-dot.on { opacity:1; box-shadow:0 0 8px currentColor; }
+.sem-dot.green { background:#1A6B45; color:#1A6B45; }
+.sem-dot.yellow { background:#B8720C; color:#B8720C; }
+.sem-dot.red { background:#B01C1C; color:#B01C1C; }
+.sem-label { font-size:11px; font-weight:700; margin-left:4px; }
+.sem-label.red { color:var(--vermelho); }
+.sem-label.yellow { color:var(--amarelo); }
+.sem-label.green { color:var(--verde); }
+.progress-bg { height:10px; background:var(--cinza-claro); border-radius:5px; overflow:hidden; margin-top:6px; }
+.progress-fill { height:100%; border-radius:5px; }
+.progress-labels { display:flex; justify-content:space-between; font-size:10px; color:var(--cinza); margin-bottom:4px; }
+
+/* TIMELINE */
+.timeline { position:relative; padding-left:28px; }
+.timeline::before { content:''; position:absolute; left:8px; top:8px; bottom:8px; width:2px; background:linear-gradient(to bottom,var(--azul),var(--cinza-claro)); border-radius:2px; }
+.tl-item { position:relative; padding-bottom:24px; }
+.tl-item:last-child { padding-bottom:0; }
+.tl-dot { position:absolute; left:-24px; top:3px; width:16px; height:16px; border-radius:50%; background:var(--white); border:2px solid var(--azul); display:flex; align-items:center; justify-content:center; }
+.tl-dot.now { background:var(--azul); }
+.tl-dot-inner { width:6px; height:6px; border-radius:50%; background:var(--azul); }
+.tl-date { font-size:9px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase; color:var(--azul); margin-bottom:4px; }
+.tl-title { font-size:13px; font-weight:600; color:var(--grafite); margin-bottom:8px; }
+.tl-chips { display:flex; flex-wrap:wrap; gap:6px; }
+.chip { font-size:11px; padding:3px 10px; border-radius:20px; background:var(--cinza-fundo); border:1px solid var(--cinza-claro); color:var(--grafite2); font-weight:500; }
+
+/* PTABLE */
+.ptable { width:100%; border-collapse:collapse; font-size:12px; }
+.ptable th { text-align:left; font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--cinza); padding:8px 6px 8px 0; border-bottom:2px solid var(--cinza-claro); font-weight:600; }
+.ptable td { padding:9px 6px 9px 0; border-bottom:1px solid var(--cinza-fundo); color:var(--grafite2); }
+.ptable td.green { color:var(--verde); font-weight:600; }
+.ptable td.yellow { color:var(--amarelo); font-weight:600; }
+.ptable td.red { color:var(--vermelho); font-weight:600; }
+
+/* CONQUISTAS */
+.conquista { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--cinza-fundo); }
+.conquista:last-child { border-bottom:none; }
+.c-icon { font-size:26px; flex-shrink:0; }
+.c-body { flex:1; }
+.c-body h3 { font-size:13px; font-weight:600; color:var(--grafite); margin-bottom:2px; }
+.c-body p { font-size:11px; color:var(--cinza); }
+.c-delta { text-align:right; flex-shrink:0; }
+.c-big { font-family:'Instrument Serif',serif; font-size:22px; color:var(--verde); line-height:1; }
+.c-sub { font-size:10px; color:var(--cinza); margin-top:2px; }
+.meta-item { display:flex; align-items:center; gap:14px; padding:14px 0; border-bottom:1px solid var(--cinza-fundo); }
+.meta-item:last-child { border-bottom:none; }
+.meta-body { flex:1; }
+.meta-body h3 { font-size:13px; font-weight:600; color:var(--grafite); margin-bottom:2px; }
+.meta-body p { font-size:11px; color:var(--cinza); }
+.meta-num { font-family:'Instrument Serif',serif; font-size:22px; color:var(--dourado); text-align:right; flex-shrink:0; }
+
+/* FOOTER */
+.footer { padding:20px; text-align:center; border-top:1px solid var(--cinza-claro); background:var(--white); }
+.footer p { font-size:10px; color:var(--cinza); line-height:1.8; }
+.footer strong { color:var(--azul); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.sec.active>*{animation:fadeUp 0.35s ease both}
+.sec.active>*:nth-child(2){animation-delay:0.05s}
+.sec.active>*:nth-child(3){animation-delay:0.10s}
+.sec.active>*:nth-child(4){animation-delay:0.15s}
+.sec.active>*:nth-child(5){animation-delay:0.20s}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">Sistema Vitalidade Inteligente 40+™</div>
+  <div class="brand-name">Sherley Ferreira — Consultora de Desempenho</div>
+  <div class="profile-row">
+    <div class="avatar">M</div>
+    <div class="profile-info">
+      <h1>Marcos Valério Abreu</h1>
+      <p>59 anos · 175cm · Objetivo: Emagrecimento</p>
+    </div>
+  </div>
+  <div class="header-tags">
+    <span class="htag htag-white">2 Avaliações</span>
+    <span class="htag htag-green">✅ −4,29kg gordura</span>
+    <span class="htag htag-yellow">⚠ Cintura: Risco Moderado</span>
+  </div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="show('geral',this)">Visão Geral</button>
+  <button class="tab" onclick="show('composicao',this)">Composição</button>
+  <button class="tab" onclick="show('classificacoes',this)">Classificações</button>
+  <button class="tab" onclick="show('evolucao',this)">Evolução</button>
+  <button class="tab" onclick="show('conquistas',this)">Conquistas</button>
+</div>
+
+<!-- VISÃO GERAL -->
+<div class="sec active" id="sec-geral">
+
+  <div class="destaque">
+    <h3>🏆 Mesmo peso. Corpo completamente diferente.</h3>
+    <p>Em 6 meses, Marcos manteve os 78,9kg mas transformou sua composição: <strong>+4,29kg de músculo</strong> e <strong>−4,29kg de gordura</strong>. Isso é recomposição corporal real — o que importa não é o peso na balança.</p>
+  </div>
+
+  <!-- Classificações em destaque -->
+  <div class="card">
+    <div class="card-title">🚦 Classificações OMS — Abr/2026</div>
+
+    <div class="class-bloco amarelo">
+      <div class="class-bloco-label">Circunferência da Cintura — OMS</div>
+      <div class="class-bloco-titulo">⚠ RISCO MODERADO — 93cm</div>
+      <div class="class-bloco-desc">Limite de risco para homens: <strong>94cm</strong>. Marcos está 1cm abaixo do limite — mas já reduziu <strong>4cm</strong> desde outubro. Meta: abaixo de 94cm. ✅ Quase lá.</div>
+    </div>
+
+    <div class="class-bloco amarelo">
+      <div class="class-bloco-label">IMC — OMS</div>
+      <div class="class-bloco-titulo">⚠ EXCESSO DE PESO — IMC 25,76</div>
+      <div class="class-bloco-desc">Faixa normal: até 24,9. Marcos está 0,76 pontos acima do limite. Meta: IMC abaixo de 24,9 com peso de 73kg.</div>
+    </div>
+
+    <div class="class-bloco amarelo">
+      <div class="class-bloco-label">RCQ — Relação Cintura/Quadril</div>
+      <div class="class-bloco-titulo">⚠ RISCO MODERADO — RCQ 0,97</div>
+      <div class="class-bloco-desc">Para homens: risco alto acima de 1,0. Marcos reduziu de <strong>1,02 (Alto)</strong> para <strong>0,97 (Moderado)</strong>. Melhora real, mas ainda requer atenção.</div>
+    </div>
+
+    <div class="class-bloco verde">
+      <div class="class-bloco-label">% Gordura Corporal</div>
+      <div class="class-bloco-titulo">✅ BOM — 19,47%</div>
+      <div class="class-bloco-desc">Referência para homens 59 anos: até 25%. Marcos está dentro da faixa saudável. Partiu de 24,9% e chegou a 19,47% — excelente evolução.</div>
+    </div>
+  </div>
+
+  <!-- Status atual -->
+  <div class="card">
+    <div class="card-title">📊 Status Atual — Abr/2026</div>
+    <div class="mgrid">
+      <div class="mcard">
+        <div class="mcard-label">Peso</div>
+        <div class="mcard-value">78,9<span style="font-size:13px;font-weight:500">kg</span></div>
+        <div class="mcard-sub">Meta: 73kg</div>
+        <span class="pill pill-yellow">−5,9kg p/ meta</span>
+      </div>
+      <div class="mcard destaque-card">
+        <div class="mcard-label">% Gordura</div>
+        <div class="mcard-value">19,5<span style="font-size:13px;font-weight:500">%</span></div>
+        <div class="mcard-sub">Início: 24,9%</div>
+        <span class="pill pill-green">−5,43pp ✅</span>
+      </div>
+      <div class="mcard">
+        <div class="mcard-label">Cintura</div>
+        <div class="mcard-value">93<span style="font-size:13px;font-weight:500">cm</span></div>
+        <div class="mcard-sub">Limite risco: 94cm</div>
+        <span class="pill pill-yellow">⚠ Quase no limite</span>
+      </div>
+      <div class="mcard">
+        <div class="mcard-label">RCQ</div>
+        <div class="mcard-value">0,97</div>
+        <div class="mcard-sub">Era: 1,02 (Alto)</div>
+        <span class="pill pill-yellow">↓ Moderado</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Composição visual -->
+  <div class="card">
+    <div class="card-title">⚖️ Composição Atual — Abr/2026</div>
+    <div class="seg-wrap">
+      <div>
+        <div class="seg-label-row">
+          <span class="seg-name">Massa Magra</span>
+          <span class="seg-value" style="color:var(--azul)">63,54 kg · 80,5%</span>
+        </div>
+        <div class="seg-bar-bg"><div class="seg-bar-fill" style="width:80%;background:var(--azul)"></div></div>
+      </div>
+      <div>
+        <div class="seg-label-row">
+          <span class="seg-name">Gordura Corporal</span>
+          <span class="seg-value" style="color:var(--amarelo)">15,36 kg · 19,5%</span>
+        </div>
+        <div class="seg-bar-bg"><div class="seg-bar-fill" style="width:20%;background:var(--amarelo)"></div></div>
+      </div>
+      <div>
+        <div class="seg-label-row">
+          <span class="seg-name">% Gordura — Progresso</span>
+          <span class="seg-value" style="color:var(--verde)">↓ 24,9% → 19,47%</span>
+        </div>
+        <div class="seg-bar-bg">
+          <div class="seg-bar-fill" style="width:72%;background:linear-gradient(90deg,var(--verde),var(--amarelo))"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:var(--cinza);margin-top:4px">
+          <span>Meta: 14%</span><span>Atual: 19,47%</span><span>Início: 24,9%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- COMPOSIÇÃO -->
+<div class="sec" id="sec-composicao">
+
+  <div class="card">
+    <div class="card-title">📋 Comparativo Out/25 × Abr/26</div>
+    <div class="comp-grid">
+      <div class="comp-col col1">
+        <div class="comp-label">Out/2025 — Avaliação 1</div>
+        <div class="comp-row"><span class="comp-name">Peso</span><span class="comp-val">78,9kg</span></div>
+        <div class="comp-row"><span class="comp-name">% Gordura</span><span class="comp-val yellow">24,9%</span></div>
+        <div class="comp-row"><span class="comp-name">Massa Magra</span><span class="comp-val">59,25kg</span></div>
+        <div class="comp-row"><span class="comp-name">Massa Gorda</span><span class="comp-val red">19,65kg</span></div>
+        <div class="comp-row"><span class="comp-name">Cintura</span><span class="comp-val red">97cm</span></div>
+        <div class="comp-row"><span class="comp-name">RCQ</span><span class="comp-val red">1,02 — Alto</span></div>
+        <div class="comp-row"><span class="comp-name">Gord. Excedente</span><span class="comp-val red">9,15kg</span></div>
+      </div>
+      <div class="comp-col col2">
+        <div class="comp-label" style="color:var(--verde)">Abr/2026 — Atual ★</div>
+        <div class="comp-row"><span class="comp-name">Peso</span><span class="comp-val" style="color:var(--cinza)">78,9kg =</span></div>
+        <div class="comp-row"><span class="comp-name">% Gordura</span><span class="comp-val green">19,47%</span></div>
+        <div class="comp-row"><span class="comp-name">Massa Magra</span><span class="comp-val green">63,54kg</span></div>
+        <div class="comp-row"><span class="comp-name">Massa Gorda</span><span class="comp-val green">15,36kg</span></div>
+        <div class="comp-row"><span class="comp-name">Cintura</span><span class="comp-val yellow">93cm</span></div>
+        <div class="comp-row"><span class="comp-name">RCQ</span><span class="comp-val yellow">0,97 — Moderado</span></div>
+        <div class="comp-row"><span class="comp-name">Gord. Excedente</span><span class="comp-val green">5,14kg</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔥 Evolução % Gordura</div>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 280 130" width="100%">
+        <defs>
+          <linearGradient id="gGord" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#B01C1C" stop-opacity="0.1"/>
+            <stop offset="100%" stop-color="#1A6B45" stop-opacity="0.03"/>
+          </linearGradient>
+        </defs>
+        <line x1="38" y1="20" x2="260" y2="20" class="grid-line"/>
+        <line x1="38" y1="60" x2="260" y2="60" class="grid-line"/>
+        <line x1="38" y1="100" x2="260" y2="100" class="grid-line"/>
+        <text x="34" y="23" fill="#999" font-size="8" text-anchor="end">26%</text>
+        <text x="34" y="63" fill="#999" font-size="8" text-anchor="end">22%</text>
+        <text x="34" y="103" fill="#999" font-size="8" text-anchor="end">18%</text>
+        <polygon points="90,32 200,78 200,110 90,110" fill="url(#gGord)"/>
+        <polyline points="90,32 200,78" fill="none" stroke="#B01C1C" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="90" cy="32" r="5" fill="#B01C1C"/>
+        <circle cx="200" cy="78" r="6" fill="#fff" stroke="#1A6B45" stroke-width="2.5"/>
+        <text x="90" y="23" fill="#B01C1C" font-size="10" text-anchor="middle" font-weight="700">24,9%</text>
+        <text x="200" y="69" fill="#1A6B45" font-size="10" text-anchor="middle" font-weight="700">19,47%</text>
+        <text x="145" y="52" fill="#1A6B45" font-size="8" text-anchor="middle">−5,43pp ✅</text>
+        <text x="90" y="120" fill="#999" font-size="8" text-anchor="middle">Out/25</text>
+        <text x="200" y="120" fill="#1A6B45" font-size="8" font-weight="700" text-anchor="middle">Abr/26 ★</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💪 Massa Magra vs Gordura (kg)</div>
+    <div class="chart-wrap">
+      <svg viewBox="0 0 280 160" width="100%">
+        <rect x="50" y="28" width="32" height="98" fill="#1E4976" rx="5" opacity="0.8"/>
+        <rect x="160" y="8" width="32" height="118" fill="#1E4976" rx="5"/>
+        <rect x="86" y="82" width="32" height="44" fill="#B01C1C" rx="5" opacity="0.75"/>
+        <rect x="196" y="96" width="32" height="30" fill="#1A6B45" rx="5" opacity="0.85"/>
+        <text x="66" y="22" fill="#1E4976" font-size="9.5" text-anchor="middle" font-weight="700">59,25</text>
+        <text x="176" y="3" fill="#1E4976" font-size="9.5" text-anchor="middle" font-weight="700">63,54</text>
+        <text x="102" y="76" fill="#B01C1C" font-size="9.5" text-anchor="middle" font-weight="700">19,65</text>
+        <text x="212" y="90" fill="#1A6B45" font-size="9.5" text-anchor="middle" font-weight="700">15,36</text>
+        <text x="84" y="142" fill="#999" font-size="8" text-anchor="middle">Out/25</text>
+        <text x="196" y="142" fill="#1A6B45" font-size="8" font-weight="700" text-anchor="middle">Abr/26 ★</text>
+        <rect x="50" y="150" width="10" height="7" fill="#1E4976" rx="2"/>
+        <text x="64" y="157" fill="#666" font-size="8.5">Massa Magra</text>
+        <rect x="140" y="150" width="10" height="7" fill="#B01C1C" rx="2"/>
+        <text x="154" y="157" fill="#666" font-size="8.5">Gordura</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📏 Perimetria Comparada</div>
+    <table class="ptable">
+      <thead><tr><th>Medida</th><th>Out/25</th><th>Abr/26</th><th>Variação</th></tr></thead>
+      <tbody>
+        <tr><td>Cintura</td><td style="color:var(--vermelho)">97cm</td><td style="color:var(--amarelo)">93cm</td><td class="green">−4cm ✅</td></tr>
+        <tr><td>Abdômen</td><td style="color:var(--vermelho)">98cm</td><td style="color:var(--amarelo)">93,5cm</td><td class="green">−4,5cm ✅</td></tr>
+        <tr><td>Anca</td><td>95cm</td><td>96cm</td><td class="yellow">+1cm</td></tr>
+        <tr><td>Braço Esq.</td><td>31,5cm</td><td>33,5cm</td><td class="green">+2cm 💪</td></tr>
+        <tr><td>Braço Dir.</td><td>32cm</td><td>33cm</td><td class="green">+1cm 💪</td></tr>
+        <tr><td>Tórax</td><td>105cm</td><td>105cm</td><td style="color:var(--cinza)">= mantido</td></tr>
+        <tr><td>Ombro</td><td>114cm</td><td>114cm</td><td style="color:var(--cinza)">= mantido</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:10px;color:var(--cinza);margin-top:10px">Ganho nos braços confirma desenvolvimento muscular. Redução expressiva em cintura e abdômen.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📐 Dobras Cutâneas</div>
+    <table class="ptable">
+      <thead><tr><th>Dobra</th><th>Out/25</th><th>Abr/26</th><th>Variação</th></tr></thead>
+      <tbody>
+        <tr><td>Tricipital</td><td>8mm</td><td>5mm</td><td class="green">−3mm ✅</td></tr>
+        <tr><td>Supra-ilíaca</td><td>34mm</td><td>21,5mm</td><td class="green">−12,5mm ✅</td></tr>
+        <tr><td>Abdominal</td><td>42mm</td><td>29mm</td><td class="green">−13mm ✅</td></tr>
+        <tr><td><strong>Soma total</strong></td><td><strong>84mm</strong></td><td><strong>55,5mm</strong></td><td class="green"><strong>−28,5mm ✅</strong></td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:10px;color:var(--cinza);margin-top:10px">Redução de 28,5mm na soma das dobras — perda expressiva de gordura subcutânea, especialmente abdominal.</p>
+  </div>
+
+</div>
+
+<!-- CLASSIFICAÇÕES -->
+<div class="sec" id="sec-classificacoes">
+
+  <div class="card">
+    <div class="card-title">🚦 Classificações Clínicas Completas — Abr/2026</div>
+
+    <div class="class-bloco amarelo" style="margin-bottom:10px">
+      <div class="class-bloco-label">🎯 Circunferência da Cintura — OMS (Masculino)</div>
+      <div class="class-bloco-titulo">⚠ RISCO MODERADO — 93cm</div>
+      <div class="class-bloco-desc">
+        <strong>Classificação OMS masculino:</strong><br>
+        🟢 Normal: &lt; 94cm<br>
+        🟡 Risco moderado: 94–102cm<br>
+        🔴 Risco alto: &gt; 102cm<br><br>
+        Marcos está em <strong>93cm</strong> — 1cm abaixo do limite. Reduziu 4cm desde out/25. Próxima meta: manter abaixo de 94cm.
+      </div>
+    </div>
+
+    <div class="sem-wrap">
+      <div class="sem-dots">
+        <div class="sem-dot green on"></div>
+        <div class="sem-dot yellow"></div>
+        <div class="sem-dot red"></div>
+        <span class="sem-label green">ZONA VERDE — 93cm ✅</span>
+      </div>
+      <div class="progress-labels"><span>Normal &lt;94cm</span><span>93cm atual</span><span>Início: 97cm</span></div>
+      <div class="progress-bg"><div class="progress-fill" style="width:35%;background:var(--verde)"></div></div>
+      <p style="font-size:10px;color:var(--cinza);margin-top:6px">Reduziu 4cm. Entrou na zona verde OMS na última avaliação.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="class-bloco amarelo" style="margin-bottom:10px">
+      <div class="class-bloco-label">⚖️ IMC — OMS</div>
+      <div class="class-bloco-titulo">⚠ EXCESSO DE PESO — IMC 25,76</div>
+      <div class="class-bloco-desc">
+        <strong>Classificação OMS:</strong><br>
+        🟢 Normal: 18,5–24,9<br>
+        🟡 Excesso de peso: 25,0–29,9<br>
+        🔴 Obesidade Grau I: 30–34,9<br><br>
+        IMC atual: <strong>25,76</strong>. Apenas 0,76 pontos acima do limite normal. Meta: IMC 23,8 com peso de 73kg.
+      </div>
+    </div>
+    <div class="sem-wrap">
+      <div class="sem-dots">
+        <div class="sem-dot green"></div>
+        <div class="sem-dot yellow on"></div>
+        <div class="sem-dot red"></div>
+        <span class="sem-label yellow">EXCESSO DE PESO — 25,76</span>
+      </div>
+      <div class="progress-labels"><span>Normal &lt;25</span><span>25,76</span><span>Obesidade &gt;30</span></div>
+      <div class="progress-bg"><div class="progress-fill" style="width:20%;background:var(--amarelo)"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="class-bloco amarelo" style="margin-bottom:10px">
+      <div class="class-bloco-label">📐 RCQ — Relação Cintura/Quadril</div>
+      <div class="class-bloco-titulo">⚠ RISCO MODERADO — RCQ 0,97</div>
+      <div class="class-bloco-desc">
+        <strong>Classificação OMS masculino:</strong><br>
+        🟢 Baixo: &lt; 0,90<br>
+        🟡 Moderado: 0,90–0,99<br>
+        🔴 Alto: ≥ 1,0<br><br>
+        Saiu de <strong>1,02 (Alto)</strong> para <strong>0,97 (Moderado)</strong>. Melhora real. Meta: abaixo de 0,90.
+      </div>
+    </div>
+    <div class="sem-wrap">
+      <div class="sem-dots">
+        <div class="sem-dot green"></div>
+        <div class="sem-dot yellow on"></div>
+        <div class="sem-dot red"></div>
+        <span class="sem-label yellow">MODERADO — 0,97 (era 1,02)</span>
+      </div>
+      <div class="progress-labels"><span>Baixo &lt;0,90</span><span>0,97</span><span>Alto &gt;1,0</span></div>
+      <div class="progress-bg"><div class="progress-fill" style="width:50%;background:linear-gradient(90deg,var(--verde),var(--amarelo))"></div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="class-bloco verde" style="margin-bottom:10px">
+      <div class="class-bloco-label">🔥 % Gordura Corporal — Guedes 1994</div>
+      <div class="class-bloco-titulo">✅ BOM — 19,47%</div>
+      <div class="class-bloco-desc">
+        <strong>Referência para homens 50–59 anos:</strong><br>
+        🟢 Bom: 10–22%<br>
+        🟡 Acima do esperado: 22–27%<br>
+        🔴 Obesidade: &gt; 27%<br><br>
+        Partiu de <strong>24,9% (acima do esperado)</strong> e chegou a <strong>19,47% (bom)</strong>. Excelente evolução.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- EVOLUÇÃO -->
+<div class="sec" id="sec-evolucao">
+  <div class="card">
+    <div class="card-title">⏱ Linha do Tempo</div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-date">Outubro 2025 — Avaliação 1</div>
+        <div class="tl-title">Diagnóstico inicial — cintura em zona de risco alto</div>
+        <div class="tl-chips">
+          <span class="chip">Peso <strong>78,9kg</strong></span>
+          <span class="chip" style="color:var(--amarelo)">%G <strong>24,9%</strong></span>
+          <span class="chip" style="color:var(--vermelho)">Cintura <strong>97cm</strong></span>
+          <span class="chip" style="color:var(--vermelho)">RCQ <strong>1,02 Alto</strong></span>
+          <span class="chip">IMC <strong>25,76</strong></span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot now"></div>
+        <div class="tl-date">Abril 2026 — Avaliação Atual ★</div>
+        <div class="tl-title" style="color:var(--azul)">Recomposição total — mesmo peso, outro corpo</div>
+        <div class="tl-chips">
+          <span class="chip" style="color:var(--cinza)">Peso <strong>78,9kg =</strong></span>
+          <span class="chip" style="color:var(--verde)">%G <strong>19,47%</strong></span>
+          <span class="chip" style="color:var(--verde)">Cintura <strong>93cm ✅</strong></span>
+          <span class="chip" style="color:var(--amarelo)">RCQ <strong>0,97 Mod.</strong></span>
+          <span class="chip" style="color:var(--verde)">M.Magra <strong>+4,29kg</strong></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONQUISTAS -->
+<div class="sec" id="sec-conquistas">
+  <div class="card">
+    <div class="card-title">🏆 Conquistas em 6 Meses</div>
+
+    <div class="conquista">
+      <div class="c-icon">💪</div>
+      <div class="c-body"><h3>Ganho de Massa Magra</h3><p>Aumento expressivo de músculo em 6 meses</p></div>
+      <div class="c-delta"><div class="c-big">+4,29kg</div><div class="c-sub">59,25 → 63,54kg</div></div>
+    </div>
+
+    <div class="conquista">
+      <div class="c-icon">🔥</div>
+      <div class="c-body"><h3>Gordura Eliminada</h3><p>Perda real de gordura com peso estável</p></div>
+      <div class="c-delta"><div class="c-big">−4,29kg</div><div class="c-sub">19,65 → 15,36kg</div></div>
+    </div>
+
+    <div class="conquista">
+      <div class="c-icon">📏</div>
+      <div class="c-body"><h3>Redução da Cintura</h3><p>Saiu da zona de risco alto — entrou na zona verde OMS</p></div>
+      <div class="c-delta"><div class="c-big">−4cm</div><div class="c-sub">97 → 93cm</div></div>
+    </div>
+
+    <div class="conquista">
+      <div class="c-icon">🫃</div>
+      <div class="c-body"><h3>Redução do Abdômen</h3><p>Redução direta de gordura visceral</p></div>
+      <div class="c-delta"><div class="c-big">−4,5cm</div><div class="c-sub">98 → 93,5cm</div></div>
+    </div>
+
+    <div class="conquista">
+      <div class="c-icon">📐</div>
+      <div class="c-body"><h3>Dobras Cutâneas</h3><p>Redução expressiva de gordura subcutânea</p></div>
+      <div class="c-delta"><div class="c-big">−28,5mm</div><div class="c-sub">84 → 55,5mm</div></div>
+    </div>
+
+    <div class="conquista">
+      <div class="c-icon">📊</div>
+      <div class="c-body"><h3>RCQ — Risco Cardiovascular</h3><p>Saiu da faixa Alto e entrou em Moderado</p></div>
+      <div class="c-delta"><div class="c-big">−0,05</div><div class="c-sub">1,02 → 0,97</div></div>
+    </div>
+
+    <div class="conquista">
+      <div class="c-icon">🔬</div>
+      <div class="c-body"><h3>% Gordura — Mudança de Categoria</h3><p>Saiu de "acima do esperado" e entrou em "bom"</p></div>
+      <div class="c-delta"><div class="c-big">−5,43pp</div><div class="c-sub">24,9 → 19,47%</div></div>
+    </div>
+
+  </div>
+
+  <div class="card" style="border-color:rgba(184,150,12,0.3)">
+    <div class="card-title">🎯 Próximas Metas — Jul/2026</div>
+    <div class="meta-item">
+      <div class="c-icon">⚖️</div>
+      <div class="meta-body"><h3>Peso meta: 73kg</h3><p>Faltam 5,9kg com manutenção de massa magra</p></div>
+      <div class="meta-num">−5,9kg</div>
+    </div>
+    <div class="meta-item">
+      <div class="c-icon">🔬</div>
+      <div class="meta-body"><h3>% Gordura: meta 14%</h3><p>Faltam 5,47pp — ritmo atual: excelente</p></div>
+      <div class="meta-num">−5,5pp</div>
+    </div>
+    <div class="meta-item">
+      <div class="c-icon">📏</div>
+      <div class="meta-body"><h3>RCQ abaixo de 0,90</h3><p>Faltam 0,07 — saída da zona de risco</p></div>
+      <div class="meta-num">−0,07</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p><strong>Sistema Vitalidade Inteligente 40+™</strong><br>
+  Sherley Ferreira · Educação Física · Mestre em Nutrição<br>
+  Método Fit360™ · Dados: MFIT Personal · Protocolo Guedes 1994</p>
+</div>
+
+<script>
+function show(id,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
